@@ -1,0 +1,847 @@
+\documentclass[12pt,a4paper]{book}
+
+\usepackage{xeCJK}
+\usepackage[margin=0.98in]{geometry} % 设置页面边距
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat = newest}
+\pagestyle{fancy} % 设置页面风格为 fancy
+\fancyhead[L]{\fontsize{10pt}{12pt}\selectfont NLS工程数学基础-版本：2024.4} % 左侧页眉
+\fancyhead[R]{\fontsize{10pt}{12pt}\selectfont Funoke} % 右侧页眉，设置字体大小
+\setCJKmainfont{SimSun} % 设置中文字体为宋体
+\newCJKfontfamily{\zhsong}{SimSun} % 定义宋体
+\newCJKfontfamily{\zhhei}{SimHei} % 定义黑体
+
+\setlength{\baselineskip}{20pt}
+
+\usepackage{tocloft}
+\setcounter{tocdepth}{3}
+
+
+
+
+
+\begin{document}
+\tableofcontents
+
+\newpage
+
+\begin{center}
+{\zhhei\fontsize{30pt}{40pt} 工程数学基础}
+\end{center}
+
+\vspace{20pt}
+
+\begin{center}
+{\zhhei\centering By NLS-Funoke}
+\end{center}
+
+{\section{\centering\fontsize{25pt}{20pt}\zhhei{矩阵与行列式}}}
+{\subsection{\centering\fontsize{20pt}{20pt}\zhhei{矩阵从何而来}}}
+
+下面是一个常见的三元方程组：
+
+
+\[
+\begin{cases}
+x + y + z = 1    \quad\textcircled{1}\\
+2x - y + 3z = 2  \quad\textcircled{2}\\
+3x + 2y - z = 3  \quad\textcircled{3}
+\end{cases}
+\]
+
+为了记录这样的方程组，我们不妨拿一个表格，来记录下其每个未知数对应的系数。
+
+\[
+\begin{pmatrix}
+1 & 1 & 1 \\
+2 & -1 & 3 \\
+3 & 2 & -1 
+\end{pmatrix}
+\]
+
+我们称这样的表格为矩阵，因此目前我们知道，在线性代数中，矩阵是一种记录数据的方式。
+
+由系数组成的矩阵叫做稀疏矩阵，同样地，完整地将方程组右边的常数项写进系数矩阵后的矩阵就叫做增广矩阵：
+
+\[
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+2 & -1 & 3 & 2\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+\]
+
+在解方程的过程中，我们会选择把其中两个式子拿出来看，并把其中一个式子左右两边减去另外一个式子左右两边的某常数倍以达到消元的效果，比如我们用\textcircled{2}-\textcircled{1} $\times$ 2，得到：
+
+\begin{center}
+\centering (2x-y+3z)-2$\times$(x+y+z)=2=2$\times$1
+\end{center}
+
+也就是：
+\begin{center}
+0-3y+z=0\textcircled{4}
+\end{center}
+
+这样一来，我们就将\textcircled{4}替换掉\textcircled{2}，成功完成了对于\textcircled{2}式中x项的消元。
+
+得到了新方程：
+\[
+\begin{cases}
+x + y + z = 1    \quad\textcircled{1}\\
+- 3y + z = 0  \quad\textcircled{2}\\
+3x + 2y - z = 3  \quad\textcircled{3}
+\end{cases}
+\]
+从之前定义的增广矩阵的视角看，我们分别建立原本方程和新方程的增广矩阵，增广矩阵的变化象征着一个变换操作的完成：
+
+
+
+\[
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+2 & -1 & 3 & 2\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+\xrightarrow{R_2\rightarrow R_2 - 2R_1}\begin{pmatrix}
+1 & 1 & 1 & 1\\
+2 - 2\times1 & -1 - 2\times1 & 3 - 2\times1 & 2 - 2\times1\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+\]
+
+\[
+=
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & -3 & 1 & 0\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+\]
+
+这就是矩阵的行变换，我们可以通过：
+
+1、矩阵中某行乘某个常数
+
+2、矩阵中某行加上另一行的某常数倍
+
+3、矩阵中两行交换
+
+这三种方式进行矩阵的行变换，这样化简出来不影响方程的解。
+
+\vspace{10pt}
+变换到什么时候能解出方程的解呢？
+
+只需要保证下面几个条件成立即可：
+
+\textcircled{1}矩阵每行最左边的非零数都是1，把这些“1”及其右边的所有数“涂黑”，观察涂出来的形状是“贴在右上角的梯形”
+
+\textcircled{2}对于刚刚找到的那些“1“，其上方的数全部都是0.
+
+\vspace{12pt}
+
+下面是变换到这样的标准的示例：
+
+令：
+\[
+A=
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+2 & -1 & 3 & 2\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+\]
+
+
+\[
+A=\begin{pmatrix}
+1 & 1 & 1 & 1\\
+2 & -1 & 3 & 2\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+\xrightarrow{R_2\rightarrow R_2 - 2R_1}\begin{pmatrix}
+1 & 1 & 1 & 1\\
+2 - 2\times1 & -1 - 2\times1 & 3 - 2\times1 & 2 - 2\times1\\
+3 & 2 & -1 & 3
+\end{pmatrix}\\
+$$
+\vspace{10pt}
+
+$=\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & -3 & 1 & 0\\
+3 & 2 & -1 & 3
+\end{pmatrix}
+	\xrightarrow{R_3\rightarrow R_3 - 3R_1}
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & -3 & 1 & 0\\
+3 - 3\times1 & 2 - 3\times1 & -1 - 3\times1 & 3 - 3\times1
+\end{pmatrix}\\
+$
+\vspace{10pt}
+
+$=\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & -3 & 1 & 0\\
+0 & -1 & -4 & 0
+\end{pmatrix}
+	\xrightarrow{R_2\rightarrow -\frac{1}{3}R_2}
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & 1 & -\frac{1}{3} & 0\\
+0 & -1 & -4 & 0
+\end{pmatrix}.
+	\xrightarrow{R_3\rightarrow R_3 + R_2}
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & 1 & -\frac{1}{3} & 0\\
+0 & 0 & -\frac{13}{3} & 0
+\end{pmatrix}
+$
+\vspace{10pt}
+
+$	\xrightarrow{R_3\rightarrow -\frac{3}{13}R_3}
+\begin{pmatrix}
+1 & 1 & 1 & 1\\
+0 & 1 & -\frac{1}{3} & 0\\
+0 & 0 & 1 & 0
+\end{pmatrix}
+	\xrightarrow{R_2\rightarrow R_2+\frac{1}{3}R_3 ;\quad R_1-R_3}
+\begin{pmatrix}
+1 & 1 & 0 & 1\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0
+\end{pmatrix}
+	\xrightarrow{R_1\rightarrow R_1-R_2}
+\begin{pmatrix}
+1 & 0 & 0 & 1\\
+0 & 1 & 0 & 0\\
+0 & 0 & 1 & 0
+\end{pmatrix}
+$$$\]
+
+\vspace{12pt}
+
+终于，我们能够将x，y，z一一对应到最右列
+即通过
+\[
+\begin{cases}
+x + y + z = 1    \quad\textcircled{1}\\
+2x - y + 3z = 2  \quad\textcircled{2}\\
+3x + 2y - z = 3  \quad\textcircled{3}
+\end{cases}
+\]
+
+得到
+\[
+\begin{cases}
+x = 1    \quad\textcircled{1}\\
+y = 0  \quad\textcircled{2}\\
+z = 0  \quad\textcircled{3}
+\end{cases}
+\]
+
+容易总结出，一般的化简思路就是从左往右化间出来“0”列,在这样的过程中如果遇到了：
+
+\vspace{10pt}
+上面一行最左非零数比下面一行最作非零数靠右
+
+\vspace{10pt}
+这样的情况则可以进行行交换.
+
+然后再从右往左将每行最左边的非0数上方化为0,最终化简出形如上方矩阵的形式即称作矩阵的简化阶梯形。
+
+\vspace{20pt}
+这样，我们就知道了矩阵最基础的应用：对于一个线性（各未知元为一次）的方程组，我们可以通过矩阵存储这个方程组的系数和常数数据，并通过行变换得到一个能够轻松获取方程组结果的形式。
+
+{\subsection{\centering\fontsize{20pt}{20pt}\zhhei{主元列和自由变量}}}
+上一小节中我们找到了化简成简化阶梯形的方式，在得到结果之后，这些左边都是”0“的”1“所在的位置称作”主元位置“，所在的列称作”主元列“。
+
+而“主元”则是该矩阵被化作阶梯形状态时，主元位置对应的非零数，用于将其所在列其他元素化为0。
+
+我们在化简矩阵时可能遇到下面的情况：
+
+对于方程：
+\[
+\begin{cases}
+a+6b+2c-5d-2e=-4\\
+2c-8d-e=3\\
+e=7
+\end{cases}
+\]
+
+对应矩阵：
+\[
+\begin{pmatrix}
+1&6&2&-5&-2&-4\\
+0&0&2&-8&-1&3\\
+0&0&0&0&1&7
+\end{pmatrix}
+\]
+可以化简为：
+\[
+\begin{pmatrix}
+1&6&0&3&0&0\\
+0&0&1&-4&0&5\\
+0&0&0&0&1&7
+\end{pmatrix}
+\]
+这样的结果有所不同，其含义是：
+\[
+\begin{cases}
+a=-6b-3d\\
+b$是自由变量$\\
+c=5+4d\\
+d$是自由变量$\\
+e=7
+\end{cases}
+\]
+自由变量的意思是：你可以认为这个变量等于任何一个实数
+
+{\subsection{\centering\fontsize{20pt}{20pt}\zhhei{方程组的几何解释}}}
+从一个普通的例子讲起，对于方程组：
+\[
+\begin{cases}
+2x-y=0\\
+-x+2y=3
+\end{cases}
+\]
+
+我们来看直角坐标系中的图像：
+
+\begin{center}
+
+\begin{tikzpicture}
+    \begin{axis}[
+    		axis lines = middle,
+        xlabel={$x$},
+        ylabel={$y$},
+        xmin=-2, xmax=4,
+        ymin=-2, ymax=4 
+       ]
+        \addplot [domain=-2:4, samples=100, color=blue]{2*x};
+        \addplot [domain=-2:4, samples=100, color=red]{0.5*x+1.5};
+    \end{axis}
+\end{tikzpicture}
+
+\end{center}
+
+显然我们看到交点(1,2)对应得到方程组的解(x,y)，按照中学知识的思路，除了按照函数角度理解这个问题，还可以按照向量角度进行理解，我们曾经学过基向量表示任一向量的方式，所以我们可以将上面的方程转化为向量相加的方程：
+
+\begin{center}
+x(2,-1)+y(-1,2)=(0,3)
+\end{center}
+
+这是把两个向量正教分解到x-y上，而x和y为未知的数乘因子，两个向量相加合成新的向量，这样的好处是分解到x和y上的量互不干扰，当同时成立时，我们就解出了x和y，这和方程组本质上是一样的。
+
+在线性代数中，我们常把向量写成列的形式，这就是向量方程，如下：
+
+\[
+x
+\begin{pmatrix}
+2\\
+-1
+\end{pmatrix}
++y
+\begin{pmatrix}
+-1\\
+2
+\end{pmatrix}
+=
+\begin{pmatrix}
+0\\
+3
+\end{pmatrix}
+\]
+
+像这样，我们称作向量
+$\begin{pmatrix}
+2\\
+-1
+\end{pmatrix}$
+和向量
+$\begin{pmatrix}
+-1\\
+2
+\end{pmatrix}$
+的某种线性组合得到了向量
+$\begin{pmatrix}
+0\\
+3
+\end{pmatrix}$
+
+\vspace{10pt}
+
+这样写难免会有失简洁，我们希望，能用一个矩阵存储线性方程组的系数，用一个矩阵存储未知数，再用一个矩阵存储等号右边的常数。在需要的时候可以通过一种运算方法（实际上就是矩阵的乘法）把这三个矩阵翻译回来。一方面，这可以使存储更加简洁，另一方面，这也为后面引入的矩阵算法乃至更高层次的计算机并行计算打下基础。
+
+
+
+{\subsection{\centering\fontsize{20pt}{20pt}\zhhei{矩阵乘法}}}
+
+
+{\subsubsection{\centering\fontsize{20pt}{15pt}\zhhei{从线性组合到基础矩阵乘法}}}
+不妨先按照我们的设想，把之前作为例子的式子写作设想的矩阵形式，有：
+\[
+\begin{pmatrix}
+2&-1\\
+-1&2
+\end{pmatrix}
+\begin{pmatrix}
+x\\
+y
+\end{pmatrix}
+=
+\begin{pmatrix}
+0\\
+3
+\end{pmatrix}
+\]
+我们把第一个矩阵称为系数矩阵A，将第二个矩阵成为向量x，将第三个矩阵成为向量b，于是线性方程组可以表示为Ax=b。
+
+为了把这样的式子翻译回向量方程，我们采取以下策略：
+
+对于系数矩阵A，它其实是我们选择的基向量写在一起构成的矩阵，还原这些基向量，我们需要把这个矩阵从左到右一列一列地拆开：
+
+\[
+\begin{pmatrix}
+2&-1\\
+-1&2
+\end{pmatrix}
+\rightarrow
+\begin{pmatrix}
+2\\
+-1
+\end{pmatrix}
+and
+\begin{pmatrix}
+-1\\
+2
+\end{pmatrix}
+\]
+
+对于向量x，我们把它看作储存基向量的“权”一个列表，从上到下依次拆开，得到：
+
+\[
+\begin{pmatrix}
+x\\
+y
+\end{pmatrix}
+\rightarrow
+\quad x \quad and \quad y
+\]
+
+现在我们发现拆开的第一个基向量乘上拆开的第一个权，加上拆开的第二个基向量乘上拆开的第二个权，就是原本的方程：
+\[
+x
+\begin{pmatrix}
+2\\
+-1
+\end{pmatrix}
++y
+\begin{pmatrix}
+-1\\
+2
+\end{pmatrix}
+=
+\begin{pmatrix}
+0\\
+3
+\end{pmatrix}
+\]
+
+系数矩阵按照从左到有一列一列拆开的向量称作列向量。
+
+只看Ax而不加其他限定（比如=b），那么这个时候x是自由的的，我们将Ax看作列向量的线性组合。
+
+{\subsubsection{\centering\fontsize{20pt}{15pt}\zhhei{完整矩阵乘法}}}
+
+按照之前的思路，“翻译”一下该矩阵乘法：
+
+\[
+A=\begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1s}\\
+a_{21} & a_{22} & \cdots & a_{2s}\\
+\vdots & \vdots & \ddots & \vdots\\
+a_{m1} & a_{m2} & \cdots & a_{ms}
+\end{pmatrix}_{m\times s}
+B=\begin{pmatrix}
+b_{11} & b_{12} & \cdots & b_{1n}\\
+b_{21} & b_{22} & \cdots & b_{2n}\\
+\vdots & \vdots & \ddots & \vdots\\
+b_{s1} & b_{s2} & \cdots & b_{sn}
+\end{pmatrix}_{n\times s}
+\]
+
+按照以前的思路，求A$\times$B，显然有：
+设C=A$\times$B，则
+\[
+C=
+\begin{pmatrix}
+a_{11}\\
+a_{21}\\
+\vdots\\
+a_{m1}
+\end{pmatrix}
+\begin{pmatrix}
+b_{11} & b_{12} & \cdots & b_{1n}
+\end{pmatrix}
++
+\begin{pmatrix}
+a_{12}\\
+a_{22}\\
+\vdots\\
+a_{m2}
+\end{pmatrix}
+\begin{pmatrix}
+b_{21} &
+\cdots &
+b_{2n}
+\end{pmatrix}
++\cdots
+\begin{pmatrix}
+a_{1s}\\
+a_{2s}\\
+b_{s2} &
+\vdots\\
+a_{ms}
+\end{pmatrix}
+\begin{pmatrix}
+b_{s1} &
+\cdots &
+b_{sn}
+\end{pmatrix}
+\]
+这能得到一个什么样的结果呢？
+我们先定义列向量乘行向量的乘法：
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{} & \textbf{$b_{11}$} & \textbf{$b_{12}$} & \textbf{$b_{13}$} & \textbf{$\cdots$} & \textbf{$b_{1n}$} \\
+\hline
+$a_{11}$ & $a_{11} \times b_{11}$ & $a_{11} \times b_{12}$ & $a_{11} \times b_{13}$ & $\cdots$ & $a_{11} \times b_{1n}$ \\
+$a_{21}$ & $a_{21} \times b_{11}$ & $a_{21} \times b_{12}$ & $a_{21} \times b_{13}$ & $\cdots$ & $a_{21} \times b_{1n}$ \\
+$a_{31}$ & $a_{31} \times b_{11}$ & $a_{31} \times b_{12}$ & $a_{31} \times b_{13}$ & $\cdots$ & $a_{31} \times b_{1n}$ \\
+$\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ & $\vdots$ \\
+$a_{m1}$ & $a_{m1} \times b_{11}$ & $a_{m1} \times b_{12}$ & $a_{m1} \times b_{13}$ & $\cdots$ & $a_{m1} \times b_{1n}$ \\
+\hline
+\end{tabular}
+\end{center}
+我们按照行列匹配的方式，最终得到一个
+\[
+C_{1}=\begin{pmatrix}
+a_{11} \times b_{11} & a_{11} \times b_{12} & \cdots & a_{11} \times b_{1n} \\
+a_{21} \times b_{11} & a_{21} \times b_{13} & \cdots & a_{21} \times b_{1n} \\
+\vdots & \vdots & \ddots & \vdots\\
+a_{m1} \times b_{11} & a_{m1} \times b_{12} & \cdots & a_{m1} \times b_{1n}
+\end{pmatrix}_{m\times s}
+\]
+按照这样的规律，我们能得到：
+\[C=C_1+C_2+\cdots+C_s\]
+
+为了得到结果，我们需要规定矩阵的加法，其实矩阵的加法只需要在两个矩阵都是m行n列的矩阵情况下，同一个位置的项相加起来构成一个新的m行n列矩阵即可，例如：
+
+\[
+\begin{pmatrix}
+a&b\\
+c&d
+\end{pmatrix}
++
+\begin{pmatrix}
+e&f\\
+g&h
+\end{pmatrix}
+=
+\begin{pmatrix}
+a+e&b+f\\
+c+g&d+h
+\end{pmatrix}
+\]
+
+$这样的话，我们重新关注C，记C的第i行j列元素为c_{ij}$
+
+那么容易得到（读者下来自己推导一下过程）:
+\begin{center}
+$c_{ij}=\sum\limits_{n = 1}^{s}{a_{i,n} \times b_{n,i}}$
+\end{center}
+
+{\subsection{\centering\fontsize{20pt}{15pt}\zhhei{从矩阵乘法到初等变换}}}
+
+{\subsubsection{\centering\fontsize{15pt}{15pt}\zhhei{对角矩阵}}}
+在学习完矩阵乘法后，我们能够充分地感受到在经历乘法运算后，我们能够得到一个具有一定规律的“新的矩阵”那么我们能不能通过找到一些比较特殊的乘法，来完成一些特殊的变换呢？
+
+不妨先来定义一个概念：对角矩阵。
+对于一个方阵（n$\times$ n的矩阵，称为n阶方阵）从左上角到右下角这根连线上（称为主对角线）是任意数，其它地方是0,那么这就是对角矩阵。更多的，如果是右上角到左下角连线上是任意数，那么就称之为反对角矩阵。
+
+形如：
+\[
+E=
+\begin{pmatrix}
+a_1&0&\cdots&0\\
+0&a_2&&\\
+\vdots&&\ddots&\vdots\\
+0&&\cdots&a_n
+\end{pmatrix}
+\]
+
+
+{\subsubsection{\centering\fontsize{15pt}{15pt}\zhhei{特殊对角矩阵-零矩阵与单位矩阵}}}
+我们把零矩阵记作O，满足：
+\[
+O=
+\begin{pmatrix}
+0&0&\cdots&0\\
+0&0&&\\
+\vdots&&\ddots&\vdots\\
+0&&\cdots&0
+\end{pmatrix}
+\]
+
+我们把单位矩阵记作E，满足：
+
+\[
+E=
+\begin{pmatrix}
+1&0&\cdots&0\\
+0&1&&\\
+\vdots&&\ddots&\vdots\\
+0&&\cdots&1
+\end{pmatrix}
+\]
+
+
+n阶单位矩阵$E_n$具有一个性质，就是对于任意n阶方阵$A_n$，有：
+
+
+\[ E_n A_n = A_n E_n = A_n \]
+
+请读者自行书写推导。
+
+形象地说，E在矩阵乘法中承担了一种类似于“1”的作用。
+
+\vspace{10pt}
+{\subsubsection{\centering\fontsize{15pt}{15pt}\zhhei{从单位矩阵到矩阵初等变换}}}
+我们规定，矩阵的初等变换有下面三种：
+
+\vspace{10pt}
+
+1、交换矩阵的某两行（列）
+
+2、用一个非零数乘以矩阵的某一行（列）
+
+3、将矩阵的某一行（列）的若干倍（可以是负数倍）加到另一行（列）上
+
+\vspace{10pt}
+
+在我们之前解方程的过程中已经对这样的方式有所体会，需要注意的是，解方程的过程中不能使用列变换而只能使用行变换（想想为什么）。在后面的学习中我们知道求矩阵的秩可以随意使用行列变换，而求矩阵行列式的时候只能用除了行列交换外的其他变换。
+
+\vspace{10pt}
+
+从下面几个小问题，我们引入：
+
+请读者计算：
+\[
+\begin{pmatrix}
+1&0&0&0\\
+0&0&1&0\\
+0&1&0&0\\
+0&0&0&1
+\end{pmatrix}
+\times
+\begin{pmatrix}
+a&b&c&d\\
+e&f&g&h\\
+i&j&k&l\\
+m&n&o&p
+\end{pmatrix}
+\]
+
+\[
+\begin{pmatrix}
+a&b&c&d\\
+e&f&g&h\\
+i&j&k&l\\
+m&n&o&p
+\end{pmatrix}
+\times
+\begin{pmatrix}
+1&0&0&0\\
+0&0&1&0\\
+0&1&0&0\\
+0&0&0&1
+\end{pmatrix}
+\]
+
+\[
+\begin{pmatrix}
+1&0&0&0\\
+0&-1&0&0\\
+0&0&1&0\\
+0&0&0&1
+\end{pmatrix}
+\times
+\begin{pmatrix}
+a&b&c&d\\
+e&f&g&h\\
+i&j&k&l\\
+m&n&o&p
+\end{pmatrix}
+\]
+
+\[
+\begin{pmatrix}
+a&b&c&d\\
+e&f&g&h\\
+i&j&k&l\\
+m&n&o&p
+\end{pmatrix}
+\times
+\begin{pmatrix}
+1&0&0&0\\
+0&-1&0&0\\
+0&0&1&0\\
+0&0&0&1
+\end{pmatrix}
+\]
+
+在得到结果后，你会发现对单位矩阵进行变换后得到一个新矩阵，新矩阵能够通过矩阵乘法“传导”到同阶方阵上，我们称这个矩阵为初等矩阵
+
+所以有以下结论：
+
+\vspace{10pt}
+
+1、初等矩阵与任意矩阵相乘，能够使该矩阵也经历相同的变换方式，得到变换后的矩阵
+
+2、对于初等矩阵在左边的情况，是对应进行”行变换“，对于初等矩阵在右边的情况，是对应进行”列变换“
+
+\vspace{10pt}
+
+{\subsection{\centering\fontsize{20pt}{15pt}\zhhei{行列式}}}
+为了引出伴随矩阵的概念，我们有必要先插入对行列式的介绍。
+
+行列式形状很像一个方阵，外观上的区别是，行列式的两侧不是括号，而是竖线。
+
+\vspace{10pt}
+形如：
+
+\[
+\begin{vmatrix}
+a_{11} & a_{12} & \cdots & a_{1n}\\
+a_{21} & a_{22} & \cdots & a_{2n}\\
+\vdots & \vdots & \ddots & \vdots\\
+a_{n1} & a_{n2} & \cdots & a_{nn}
+\end{vmatrix}
+\]
+
+\vspace{10pt}
+
+与矩阵这样一个存储数据的表格不同，行列式能够通过计算得到一个值，那么行列式怎么计算呢？
+
+我们规定：
+
+1、
+\[
+\begin{vmatrix}
+a
+\end{vmatrix}
+=a
+\]
+2、
+\[
+\begin{vmatrix}
+a_{11}&a_{12}\\
+a_{21}&a_{22}
+\end{vmatrix}
+=a_{11}a_{22}-a_{12}a_{21}
+\]
+3、这里其实已经是代数余子式展开行列式的知识了，后面会讲
+\[
+\begin{vmatrix}
+a_{11} & a_{12} & a_{13}\\
+a_{21} & a_{22} & a_{23}\\
+a_{31} & a_{32} & a_{33}
+\end{vmatrix}
+=
+a_{11}
+\begin{vmatrix}
+a_{22}&a_{23}\\
+a_{32}&a_{33}
+\end{vmatrix}
+-
+a_{12}
+\begin{vmatrix}
+a_{21}&a_{23}\\
+a_{31}&a_{33}
+\end{vmatrix}
++
+a_{13}
+\begin{vmatrix}
+a_{21}&a_{22}\\
+a_{31}&a_{32}
+\end{vmatrix}
+\]
+对于n阶，可以依次如此一步步展开计算，但是这样展开是很复杂的，但是研究展开的结果之后，我么能够得到：
+
+\[
+\begin{vmatrix}
+a_{11} & a_{12} &\cdots & a_{1n}\\
+a_{21} & a_{22} &\cdots & a_{2n}\\
+\vdots & \vdots &\ddots & \vdots\\
+a_{n1} & a_{n2} &\cdots & a_{nn}
+\end{vmatrix}=\sum\limits_{j_1j_2\cdots j_n}(-1)^{\tau(j_1j_2\cdots j_n)}a_{1j_1}a_{2j_2}\cdots a_{nj_n}
+\]
+
+其中$\tau(j_1j_2\cdots j_n)$是逆序数，逆序数的计算方法是：
+
+设给定一个序列 $\{a_1,a_2,\cdots,a_n\}$:
+
+先设t=0
+
+第一位数开始看，如果左边有n个数比它大，那么t的值加上n（显然第一位之前没有数，故加上0）
+
+然后从第二位开始看，以此类推，直到看完最后一位数。这个时候得到的t就是这个序列的逆序数。记作$\tau(j_1j_2\cdots j_n)$
+
+\vspace{12pt}
+例如，对于序列 $\{3,1,4,2\}$，首先比较 $3$ 和后面的元素：
+   - $3 > 1$，逆序数加 $1$，此时 $t = 1$。
+   - $3 < 4$，逆序数不变。
+   - $3 > 2$，逆序数再加 $1$，此时 $t = 2$。
+
+接着比较 $1$ 和后面的元素：
+   - $1 < 4$，逆序数不变。
+   - $1 < 2$，逆序数不变。
+
+再比较 $4$ 和后面的元素：
+   - $4 > 2$，逆序数再加 $1$，此时 $t = 3$。
+
+所以序列 $\{3,1,4,2\}$ 的逆序数为 $3$。
+
+
+%$c_{ij}=\sum\limits_{n = 1}^{s}{a_{i,n} \times b_{n,i}}$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
